@@ -1,4 +1,4 @@
-pragma solidity ^0.4.2;
+pragma solidity ^0.5.16;
 
 // implement the ERC20 standard;
 contract DappToken {
@@ -18,13 +18,20 @@ contract DappToken {
         uint256 _value
     );
 
+    event Approval(
+        address indexed _owner,
+        address indexed _spender,
+        uint256 _value
+    );
+
     // rather than create a balanceOf function, define a variable that gets
     // its own setter/getter
     // gives a return function like function balanceOf(address _owner) {
     //  returns balance;   
     // }
     mapping(address => uint256) public balanceOf;
-     
+    mapping(address => mapping(address => uint256)) public allowance;
+
     constructor(string memory _name, uint256 _initialSupply,
                                         string memory _symbol) public {
         name = _name;
@@ -46,6 +53,36 @@ contract DappToken {
         balanceOf[_to] += _value;
 
         emit Transfer(msg.sender, _to, _value);
+
+        return true;
+    }
+
+    // approve
+    function approve(address _spender, uint256 _value) public returns (bool success) {
+        // Balance of the approver should be greater than value being approved for
+        require(balanceOf[msg.sender] >= _value);
+
+        allowance[msg.sender][_spender] = _value;
+
+        // approve event
+        emit Approval(msg.sender, _spender, _value);
+
+        return true; 
+    }
+
+    // once approved, transfer
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success) {
+        require(balanceOf[_from] >= _value);
+        require(allowance[_from][msg.sender] >= _value);
+        // change amounts
+
+        // call a transfer event
+        emit Transfer(_from, _to, _value);
+
+        // Update the balance
+        balanceOf[_from] -= _value;
+        balanceOf[_to] += _value;
+        allowance[_from][msg.sender] -= _value;
 
         return true;
     }
