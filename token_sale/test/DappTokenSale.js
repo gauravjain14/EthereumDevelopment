@@ -10,7 +10,7 @@ contract("DappTokenSale", function(accounts) {
     var buyer = accounts[1];
     var tokensAvailable = 75000;
     var numberOfTokens;
-    var tokenPrice = web3.utils.toWei("1.0", "ether");; // in wei
+    var tokenPrice = web3.utils.toWei("0.01", "ether");; // in wei
 
     it('initialize the contract with the correct values', function() {
         return DappTokenSale.deployed().then(function(instance){

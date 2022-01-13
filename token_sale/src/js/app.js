@@ -3,7 +3,6 @@ var Web3 = require('web3');
 const ethEnabled = async() => {
     if (window.ethereum) {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        console.log(accounts);
         window.web3 = new Web3(window.ethereum);
         return true;
     }
@@ -13,11 +12,17 @@ const ethEnabled = async() => {
 var App = {
     web3Provider: null,
     contracts: {},
+    loading: false,
     account: "0x0",
+    accounts: null,
+    tokenPrice: 1000000000000000000, // wei
+    tokensSold: 0,
+    tokensAvailable: 75000,
 
     init: function() {
         console.log("App initialized...");
-        return App.initWeb3();
+        // return App.initWeb3();
+        return App.getEthAccounts();
     },
 
     initWeb3: function() {
@@ -54,20 +59,85 @@ var App = {
         });
     },
 
+    getEthAccounts: async function() {
+        if (window.ethereum) {
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            App.accounts = accounts;
+            App.account = accounts[0];
+            window.web3 = new Web3(window.ethereum);
+            return App.initWeb3();
+        }
+    },
+
     render: function() {
-        web3.eth.getAccounts(function(err, accounts) {
-            if (err === null) {
-                App.account = accounts[0];
-                $('#accountAddress').html("Your Account: " + App.account);
-            }
-        });
-        //
+        if (App.loading) {
+            return;
+        }
+        App.loading = true;
+        var loader = $('#loader');
+        var content = $('#content');
+
+        loader.show();
+        content.hide();
+
+        var dappTokenInstance = null;
+        var dappTokenSaleInstance = null;
+        App.contracts.DappTokenSale.deployed().then(function(instance) {
+            console.log("DappTokenSale deployed");
+            dappTokenSaleInstance = instance;
+            return dappTokenSaleInstance.tokenPrice();
+        }).then(function(tokenPrice) {
+            console.log("Received token price");
+            App.tokenPrice = tokenPrice;
+            $('.token-price').html(web3.fromWei(App.tokenPrice, "ether"));
+            return dappTokenSaleInstance.tokensSold();
+        }).then(function(tokenSold) {
+            console.log("token sold");
+            App.tokensSold = tokenSold.toNumber();
+            $('.tokens-sold').html(App.tokensSold);
+            $('.tokens-available').html(App.tokensAvailable);
+
+            var progressPercent = (Math.ceil(App.tokensSold) / App.tokensAvailable) * 100;
+            $('#progress').css('width', progressPercent + '%');
+
+            App.contracts.DappToken.deployed().then(function(instance) {
+                console.log("Dapp token deployed");
+                dappTokenInstance = instance;
+                return dappTokenInstance.balanceOf(App.account);
+            }).then(function(balance) {
+                console.log("dapp balance", balance.toNumber())
+                $('.dapp-balance').html(balance.toNumber());
+
+                App.loading = false;
+                loader.hide();
+                content.show();
+            })
+        })
+    },
+
+    buyTokens: function() {
+        $('#content').hide();
+        $('#loader').show();
+
+        var numberOfTokens = $('#numberOfTokens').val();
+        App.contracts.DappTokenSale.deployed().then(function(instance) {
+            return instance.buyTokens(numberOfTokens, {
+                from: App.account,
+                value: numberOfTokens * App.tokenPrice
+            });
+        }).then(function(result) {
+            console.log('Tokens bought... ', result);
+            $('form').trigger('reset');
+            $('.tokens-sold').html(numberOfTokens);
+            $('#loader').hide();
+            $('#content').show();
+        })
     }
 }
 
 $(function() {
     $(window).on('load', function () {
-        //ethEnabled();
+        // ethEnabled();
         App.init();
    });
 })
