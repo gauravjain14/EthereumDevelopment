@@ -1,0 +1,119 @@
+{
+	"compiler": {
+		"version": "0.8.7+commit.e28d00a7"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [],
+				"name": "createStorageFactoryContract",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "retrieve",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "storageArray",
+				"outputs": [
+					{
+						"internalType": "contract Storage",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "num",
+						"type": "uint256"
+					}
+				],
+				"name": "store",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {
+				"retrieve()": {
+					"details": "Return value ",
+					"returns": {
+						"_0": "value of 'number'"
+					}
+				},
+				"store(uint256)": {
+					"details": "Store value in variable",
+					"params": {
+						"num": "value to store"
+					}
+				}
+			},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/StorageFactory.sol": "StorageFactory"
+		},
+		"evmVersion": "london",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/1_Storage.sol": {
+			"keccak256": "0xa76aa7ada53123da360298e0d930cbd384708b90a9e4806b7e393e98ba4661c9",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://7a462bccd0c97c53ccc3ae4442b2704e4a5a55bc190fba239c7c292185f46f9d",
+				"dweb:/ipfs/QmXzafgiGeojbkqmsRTayCmvEM9KaZCboAuDsx6xYprfh8"
+			]
+		},
+		"contracts/StorageFactory.sol": {
+			"keccak256": "0xc1ffc73c855159fa99c56ef6a8cc2415d3f2a7823964a6f77d9bbf0c032d9d67",
+			"license": "GPL-3.0",
+			"urls": [
+				"bzz-raw://f1264193b215ad664aeaca508e7b84fc7924a521c8d82a133196f9da98fd899c",
+				"dweb:/ipfs/QmQ6EWospCMEYnwGjkpNSKTK2pPM4ppAt2QPUdADDH96Ww"
+			]
+		}
+	},
+	"version": 1
+}
