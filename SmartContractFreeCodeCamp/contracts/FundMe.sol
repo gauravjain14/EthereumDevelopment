@@ -14,27 +14,31 @@ import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
 contract FundMe {
     // using SafeMathChainlink for uint256;
-    struct msg_info {
-        address sender;
-        uint256 value;
-    }
 
+    address owner_;
     mapping(address => uint256) public addressToAmountFunded;
-    uint256 public stored_value;
+    // multiple addresses can call this contract to deposit funds. We need to
+    // keep a track of all the funders.
+    address[] public funders;
+    
+    constructor() public {
+        // owner will be the address that deploys this contract.
+        owner_ = msg.sender;
+    }
 
     // payable allows function to receive ether
     function fund() public payable {
         // $50
         // We are setting the minimum amount can sender
         uint256 minimumUSD = 50 * 10 ** 16;
-        // require(1 > 0, abi.encodePacked(msg.sender));
         // This stops the transaction from happening. User's money
         // is not used and returned and also any unspent gas.
         require(getConversionRate(msg.value) >= minimumUSD, " You "
                     "need to spend more ETH");
         // amount sent by whoever calls this contract
         addressToAmountFunded[msg.sender] += msg.value;
-        // what the ETH -> USD conversion rate is?
+        // Update the funders list
+        funders.push(msg.sender);
     }
 
     function retrieveFund() view public returns(uint256) {
@@ -69,5 +73,22 @@ contract FundMe {
         uint256 ethPrice = getPrice(); // in Wei
         uint256 ethAmountInUSD = (ethPrice * ethAmount) / 1000000000000000000; // still remains in Wei
         return ethAmountInUSD; // in Wei
+    }
+
+    // modifier runs the require first;
+    modifier onlyOwner {
+        require(msg.sender == owner_);
+        _;
+    }
+
+    function withdraw() payable onlyOwner public {
+        // https://stackoverflow.com/questions/68545930/how-to-withdraw-all-tokens-from-the-my-contract-in-solidity#:~:text=To%20withdraw%20a%20token%20balance,you%20pass%20as%20an%20input.
+        payable(msg.sender).transfer(address(this).balance);
+        // reset everyone's balance to zero
+        for (uint256 funderIndex = 0; funderIndex < funders.length; funderIndex++) {
+            addressToAmountFunded[funders[funderIndex]] = 0;
+        }
+
+        funders = new address[](0); // reset funders array as well
     }
 }

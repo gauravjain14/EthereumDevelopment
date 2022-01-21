@@ -6,6 +6,11 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -29,6 +34,25 @@
 				"name": "fund",
 				"outputs": [],
 				"stateMutability": "payable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "funders",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -78,7 +102,7 @@
 			},
 			{
 				"inputs": [],
-				"name": "stored_value",
+				"name": "version",
 				"outputs": [
 					{
 						"internalType": "uint256",
@@ -91,15 +115,9 @@
 			},
 			{
 				"inputs": [],
-				"name": "version",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
+				"name": "withdraw",
+				"outputs": [],
+				"stateMutability": "payable",
 				"type": "function"
 			}
 		],
@@ -139,11 +157,11 @@
 			]
 		},
 		"contracts/FundMe.sol": {
-			"keccak256": "0x31d335dc558942c2c7cb5871e04d9befc9ac0c829bd3b76629c0c03089281573",
+			"keccak256": "0xdb5aff060066e05c144df30e9598d31b8a47c1037fa0f696178551789642b719",
 			"license": "GPL-3.0",
 			"urls": [
-				"bzz-raw://f5d9180cb3a8adf82b3c3b32b3643d845536d0be30bf976e7503d8669bf2b29e",
-				"dweb:/ipfs/QmVCRnAxvayjQQtSp3mTUvfHXgzwB44okhYLMKzLjPBQEa"
+				"bzz-raw://7841d3000b26674f8043b943ebda145aadcbcfe80430ab3de3a921ebbaaf0292",
+				"dweb:/ipfs/QmRAAF9k8XvNtzapWmryswoHzcaVV3CPB1cz6JDc4n6Vb1"
 			]
 		}
 	},
